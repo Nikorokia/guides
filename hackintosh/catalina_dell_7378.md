@@ -5,6 +5,15 @@ After creating my previous guide to installing Sierra on this laptop, I discover
 
 **What's New:** Compared to the original guide, the biggest changes here are switching from FakeSMC to VirtualSMC, and using the latest versions of Lilu and WhateverGreen to handle all graphics fixups.
 
+<details>
+    <summary>Recent Changes to My System</summary>
+  
+  Top is most Recent.
+  - Disabled "change GFX0 to IGPU (brightness keys)" Clover DSDT patch.
+  - Removed SSDT-PNLF.aml from /EFI/CLOVER/ACPI/patched/.
+  
+</details>
+
 **Disclaimer:** Apologies for the mess. Right now this is just a space for collecting information before it is fully organized and tested. Not all information is accurate, proceed with several grains of salt!
 
 ## Favorite Tools
