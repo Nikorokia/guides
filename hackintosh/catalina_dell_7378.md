@@ -9,8 +9,11 @@ After creating my previous guide to installing Sierra on this laptop, I discover
     <summary>Recent Changes to My System</summary>
   
   Top is most Recent.
-  - Disabled "change GFX0 to IGPU (brightness keys)" Clover DSDT patch.
-  - Removed SSDT-PNLF.aml from /EFI/CLOVER/ACPI/patched/.
+  - Upgraded to Clover r5107.
+  - Reverted to using RehabMan's VooDooPS2Controller.kext (personal issues with Force Touch and tap-clicking in latest version)
+  - Reverted to older `config.plist`: something I changed broke `ACPIBatteryManager.kext`. On the plus side, I have brightness keys back now.
+  - Reverted to RehabMan's `SSDT-PNLF.aml` in ACPI/patched/ (for brightness keys).
+  - Issue: Clover r5107 broke "Minimalism" theme icons. Using Clover.app's theme "optimize" feature fixed them but made them hilariously huge. Somewhere in there is a fix.
   
 </details>
 
