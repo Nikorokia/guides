@@ -151,9 +151,19 @@ Use proper methods to install the most up-to-date versions of the following kext
 
 ### Backlight Brightness Control
 
-##### Brightness Control
+Brightness Control in _System Preferences_>_Displays_>_Brightness_ is now enabled via WhateverGreen.
+- **Method 1:** (Using Clover Configuration)  
+  - Enable `AddPNLF` (`Boolean`>`True`) in `config.plist/ACPI/DSDT/Fixes/`.
+  - Enable `SetIntelBacklight` and `SetIntelMaxBacklight` (`Boolean`>`True`) in `config.plist/Devices`.
+- **Method 2:** (Using ACPI table)  
+    Place an [updated `SSDT-PNLF.aml`](https://i.applelife.ru/2019/09/457190_SSDT-PNLF.aml.zip) in `EFI:/EFI/CLOVER/ACPI/patched`
 
-> _Note to Self:_ This section may contain heavy errors. Finish properly configuring graphics with WhateverGreen (above), then reconsider this section.
+Controlling the brightness with the Dell laptop's Fn keys is once again a work in progress.
+
+<details>
+  <summary>Previous Methods</summary>
+  
+##### Adding Support in System Preferences
 
 > _"IntelBacklight.kext and ACPIBacklight.kext were broken by the [MacOS Sierra] 10.12.4 update." -[RehabMan](https://www.tonymacx86.com/threads/guide-laptop-backlight-control-using-applebacklightfixup-kext.218222/)_
 
@@ -166,35 +176,30 @@ in `EFI:/EFI/CLOVER/ACPI/patched/` "to activate the [ . . . ] kext"
 > _Note to Self:_ If using SortedOrder in config.plist SSDT-PNLF.aml, must be loaded after the OEM SSDTs.  
 > _Note to Self:_ AppleBacklightFixup.kext requires Lilu.
 
-##### Control with Fn keys
+##### Control with Dell laptop Fn keys
 
-Open the in-progress DSDT.dsl in MaciASL.  
-Add a custom patch originally from [krosseyed](https://www.tonymacx86.com/threads/guide-dell-inspiron-13-5378-2-in-1-macos-10-12-6.230009/) ("BRT6 Backlight Key"): Paste the following code into the Patch Text field, wait for the changes to load, and then click "Apply".  
-```
-into method label BRT6 replace_content
-begin
-    If (LEqual (Arg0, One))\n
-    {\n
-// Brightness Up\n
-        Notify (^^LPCB.PS2K, 0x0406)\n
-    }\n
-    If (And (Arg0, 0x02))\n
-    {\n
-// Brightness Down\n
-        Notify (^^LPCB.PS2K, 0x0405)\n
-    }\n
-end;
-```
+Following [this guide](https://noobsplanet.com/index.php?threads/brightness-keys-remapping-f11-and-f12-for-hackintosh.131/), you need:  
+- the `change OSID to XSID` and `change _OSI to XOSI` patches in `config.plist>ACPI>DSDT>Patches`  
+- the `SSDT-XOSI.aml` file in `EFI:/EFI/CLOVER/ACPI/patched/`  
+- RehabMan's `SSDT-PNLF.aml` in `EFI:/EFI/CLOVER/ACPI/patched/`  
+- a custom patch originally from [krosseyed](https://www.tonymacx86.com/threads/guide-dell-inspiron-13-5378-2-in-1-macos-10-12-6.230009/) ("BRT6 Backlight Key"): Paste the following code into the Patch Text field, wait for the changes to load, and then click "Apply".  
+  ```
+  into method label BRT6 replace_content
+  begin
+      If (LEqual (Arg0, One))\n
+      {\n
+  // Brightness Up\n
+          Notify (^^LPCB.PS2K, 0x0406)\n
+      }\n
+      If (And (Arg0, 0x02))\n
+      {\n
+  // Brightness Down\n
+          Notify (^^LPCB.PS2K, 0x0405)\n
+      }\n
+  end;
+  ```
 
-### ACPI Patching
-
-_[Insert section about finalizing DSDT.dsl as DSDT.aml.]_
-
-Place the following in  
-`(ssd) EFI:/EFI/CLOVER/ACPI/patched/`:
-- DSDT.aml (patched version)
-- SSDT-PNLF.aml (for backlight control)
-- SSDT-XOSI.aml ([for I2C Devices](https://fewtarius.gitbook.io/laptopguide/prepare-install-macos/setting-up-input-devices#prerequisites-for-voodooi-2-c))
+</details>
 
 ### Onboard Audio
 
