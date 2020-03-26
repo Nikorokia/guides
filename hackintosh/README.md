@@ -23,20 +23,29 @@ _Graphics Card:_ Sapphire RX 580 Pulse 8GB
 
 **Laptop**  
 _System:_ Dell Inspiron 7378 [(cnet link)](https://www.cnet.com/products/dell-inspiron-13-7378-2-in-1-13-3-core-i5-7200u-8-gb-ram-256-gb-ssd-english-i73785564grypus/)  
+_Processor:_  Intel Core i5 (7th Gen) 7200U / 2.5 GHz / 3.1 GHz / 2-core, 4-thread  
+_Graphics:_ Intel HD 620  
+_Audio:_ Realtek ALC3253  
 _Equivalent Macbook Model:_ [MacBookPro14,1](https://everymac.com/systems/apple/macbook_pro/specs/macbook-pro-core-i5-2.3-13-mid-2017-retina-display-no-touch-bar-specs.html)
 
 **Tablet**  
 _System:_ Dell Latitude 7275 (T02H001)
 
-## Desktop
+## Desktop Resources
 [z97s El Capitan](https://www.tonymacx86.com/threads/success-msi-z97s-sli-krait-edition-4690k-evga-gtx-960-el-capitan-clover.175301/)
 
-## Laptop
+## Laptop Resources
+Some promising WiFi cards for mobile Hackintosh systems:  
+- `BCM94352Z`: promising widely-available card with broad community support, requires lots of configuration to get working.  
+    Start with [this tonymacx86 thread[(https://www.tonymacx86.com/threads/broadcom-wifi-bluetooth-guide.242423/).
+- `BCM94360NG`: originally by "Fenvi", apparently supports WiFi, Bluetooth, AirDrop, and handoff out-of-box.  
+    See [this github thread](https://github.com/osy86/HaC-Mini/issues/197), [this reddit thread](https://www.reddit.com/r/hackintosh/comments/fbtak5/is_anybody_using_wifi_adapter_bcm94360ng/), and [this product page](https://www.aliexpress.com/item/4000631796433.html).  
+- OEM Apple WiFi card + NGFF adapter: ideal out-of-box support?  
+    See [this tonymacx86 thread](https://www.tonymacx86.com/threads/100-working-12-6-pin-apple-wifi-bt-card-to-m-2-ngff-adapter-handoff-unlock-with-watch-uefi.215895/).
+
 Reference System sources:  
 [tonymacx86 #1](https://www.tonymacx86.com/threads/guide-dell-inspiron-13-5378-2-in-1-macos-10-12-6.230009/), [tonymacx86 #2](https://www.tonymacx86.com/threads/work-in-progress-installing-sierra-on-dell-inspiron-13-7378-kaby-lake-laptop.213855/), [insanelymac](https://www.insanelymac.com/forum/topic/304408-dell-inspiron-13-7000-2-in-1-model-7347-is-this-hardware-possible/), [redit user](https://www.reddit.com/r/hackintosh/comments/b5v5zm/how_stable_can_a_hackintosh_be/ejipyos/)  
 [Promising-Looking Large Guides](https://osxlatitude.com/forums/topic/8506-dell-latitude-inspiron-precision-vostro-xps-clover-guide/?tab=comments#comment-54632)
-
-## Clover
 
 ## External Resources
 - [https://www.tonymacx86.com/](https://www.tonymacx86.com/)
