@@ -3,14 +3,14 @@ A personal log of my adventures in Arch. It's nice to have a record for posterit
 
 ### Configuration
 In order of their happening.
-1. [Installation](/tutorials/initial_setup.md)
-1. [Post-Installation](/tutorials/post_install.md)
-1. [Xorg Installation](/tutorials/xorg_installation.md)
+1. [Installation](/Arch/tutorials/initial_setup.md)
+1. [Post-Installation](/Arch/tutorials/post_install.md)
+1. [Xorg Installation](/Arch/tutorials/xorg_installation.md)
 
 ### Diamonds in the Rough
 Hopefully a list of reasons to keep using Arch, or linux in general.
-- [Reading EDIDs](/tutorials/edid.md)
-- Launch a minimal GUI with [Xorg and TWM](/tutorials/xorg_twm.md)!
+- [Reading EDIDs](/Arch/tutorials/edid.md)
+- Launch a minimal GUI with [Xorg and TWM](/Arch/tutorials/xorg_twm.md)!
 
 ## Diary?
 **07/14/19**  
@@ -19,7 +19,7 @@ As I stare at a blank, vanilla Xorg session---thinking about all the possibiliti
 It's a neat feeling. :) Thanks, Arch!
 
 ## More Resources
-- [Dump Files](/resources/dumps/)
+- [Dump Files](/Arch/resources/dumps/)
 
 Things I've found that I'll potentially need in the future.
 - [How we got here](https://superuser.com/questions/407043/is-it-possible-to-run-graphical-applications-such-as-firefox-without-installing)
