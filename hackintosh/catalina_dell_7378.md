@@ -167,7 +167,10 @@ Brightness Control in _System Preferences_>_Displays_>_Brightness_ is now enable
 - **Method 2:** (Using ACPI table)  
     Place an [updated `SSDT-PNLF.aml`](https://i.applelife.ru/2019/09/457190_SSDT-PNLF.aml.zip) in `EFI:/EFI/CLOVER/ACPI/patched`
 
-Controlling the brightness with the Dell laptop's Fn keys is once again a work in progress.
+Controlling the brightness with the Dell laptop's Fn keys is once again a work in progress.  
+For now, use:  
+- **Fn + S** for brightness **down**.
+- **Fn + B** for brightness **up**.
 
 <details>
   <summary>Previous Methods</summary>
