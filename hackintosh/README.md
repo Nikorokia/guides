@@ -30,6 +30,113 @@ _Graphics:_ Intel HD 620
 _Audio:_ Realtek ALC3253  
 _Equivalent Macbook Model:_ [MacBookPro14,1](https://everymac.com/systems/apple/macbook_pro/specs/macbook-pro-core-i5-2.3-13-mid-2017-retina-display-no-touch-bar-specs.html)
 
+<details>
+    <summary>Spoiler: Processor Information</summary>
+    
+From [Intel Ark](https://ark.intel.com/content/www/us/en/ark/products/95443/intel-core-i5-7200u-processor-3m-cache-up-to-3-10-ghz.html)  
+Relevent info: `Device ID, 0x5916`
+
+title                       | description
+:---                        | :---
+**Essentials**              | 
+Product Collection          | 7th Generation Intel® Core™ i5 Processors
+Code Name                   | Products formerly Kaby Lake
+Vertical Segment            | Mobile
+Processor Number            | i5-7200U
+Status                      | Launched
+Launch Date                 | Q3'16
+Lithography                 | 14 nm
+Recommended Customer Price  | $281.00  
+[]()                            |  
+**Performance**                 |
+Number of Cores                 | 2
+Number of Threads               | 4
+Processor Base Frequency        | 2.50 GHz
+Max Turbo Frequency             | 3.10 GHz
+Cache                           | 3 MB Intel® Smart Cache
+Bus Speed                       | 4 GT/s
+TDP                             | 15 W
+Configurable TDP-up Frequency   | 2.70 GHz
+Configurable TDP-up             | 25 W
+Configurable TDP-down Frequency | 800 MHz
+Configurable TDP-down           | 7.5 W
+[]()                            |  
+**Supplemental Information**    |
+Embedded Options Available      | No
+[]()                            |  
+**Memory Specifications**       |
+Max Memory Size (dependent on memory type) | 32 GB
+Memory Types | DDR4-2133, LPDDR3-1866, DDR3L-1600
+Max # of Memory Channels | 2
+Max Memory Bandwidth | 34.1 GB/s
+ECC Memory Supported ‡ | No
+[]()                            |  
+**Processor Graphics** | 
+Processor Graphics ‡ | Intel® HD Graphics 620
+Graphics Base Frequency | 300 MHz
+Graphics Max Dynamic Frequency | 1.00 GHz
+Graphics Video Max Memory | 32 GB
+Graphics Output | eDP/DP/HDMI/DVI
+4K Support | Yes, at 60Hz
+Max Resolution (HDMI 1.4)‡ | 4096x2304@24Hz
+Max Resolution (DP)‡ | 4096x2304@60Hz
+Max Resolution (eDP - Integrated Flat Panel)‡ | 4096x2304@60Hz
+Max Resolution (VGA)‡ | N/A
+DirectX* Support | 12
+OpenGL* Support | 4.5
+Intel® Quick Sync Video | Yes
+Intel® Clear Video HD Technology | Yes
+Intel® Clear Video Technology | Yes
+Number of Displays Supported ‡ | 3
+Device ID | 0x5916
+[]()                            |  
+**Expansion Options** |
+PCI Express Revision | 3.0
+PCI Express Configurations ‡ | 1x4, 2x2, 1x2+2x1 and 4x1
+Max # of PCI Express Lanes | 12
+[]()                            |  
+**Package Specifications** |
+Sockets Supported | FCBGA1356
+Max CPU Configuration | 1
+TJUNCTION | 100°C
+Package Size | 42mm X 24mm
+[]()                            |  
+**Advanced Technologies** | 
+Intel® Optane™ Memory Supported ‡ | Yes
+Intel® Speed Shift Technology  | Yes
+Intel® Turbo Boost Technology ‡ | 2.0
+Intel® vPro™ Platform Eligibility ‡ | No
+Intel® Hyper-Threading Technology ‡ | Yes
+Intel® Virtualization Technology (VT-x) ‡ | Yes
+Intel® Virtualization Technology for Directed I/O (VT-d) ‡ | Yes
+Intel® VT-x with Extended Page Tables (EPT) ‡ | Yes
+Intel® Transactional Synchronization Extensions | No
+Intel® 64 ‡ | Yes
+Instruction Set | 64-bit
+Instruction Set Extensions | Intel® SSE4.1, Intel® SSE4.2, Intel® AVX2
+Idle States | Yes
+Enhanced Intel SpeedStep® Technology | Yes
+Thermal Monitoring Technologies | Yes
+Intel® Flex Memory Access | Yes
+Intel® Identity Protection Technology ‡ | Yes
+Intel® Stable Image Platform Program (SIPP) | No
+Intel® Smart Response Technology | Yes
+Intel® My WiFi Technology | Yes
+[]()                            |  
+**Security & Reliability** | 
+Intel® AES New Instructions | Yes
+Secure Key | Yes
+Intel® Software Guard Extensions (Intel® SGX) | Yes with Intel® ME
+Intel® Memory Protection Extensions (Intel® MPX) | Yes
+Intel® Trusted Execution Technology ‡ | No
+Execute Disable Bit ‡ | Yes
+Intel® OS Guard | Yes
+Intel® Boot Guard | Yes
+[]() | 
+‡ This feature may not be available on all computing systems. Please check with the system vendor to determine if your system delivers this feature, or reference the system specifications (motherboard, processor, chipset, power supply, HDD, graphics controller, memory, BIOS, drivers, virtual machine monitor-VMM, platform software, and/or operating system) for feature compatibility. Functionality, performance, and other benefits of this feature may vary depending on system configuration. | 
+    
+</details>
+
 **Tablet**  
 _System:_ Dell Latitude 7275 (T02H001)
 
