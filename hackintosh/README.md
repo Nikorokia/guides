@@ -1,4 +1,6 @@
 # Hackintosh
+[Most Recent Build](catalina_dell_7378.md) ~ [Useful Commands](useful_commands.md)
+
 My collection of resources for Apple fans without cash
 
 _Author's note: I've discovered that despite the ubiquity of the internet, many of the resources I've used in the past are disappearing. This repo is another attempt at prolonging the life of the resources I can recover._
