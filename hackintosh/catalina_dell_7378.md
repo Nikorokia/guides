@@ -138,16 +138,6 @@ After creating my previous guide to installing Sierra on this laptop, I discover
 
 ## Post-Installation Configuration
 
-### Graphics Configuration
-
-[This is the guide :musical_note: I've been waiting for, all of my li------ife! :musical_note:](https://github.com/acidanthera/WhateverGreen/blob/master/Manual/FAQ.IntelHD.en.md)
-
-### Patching DSDT.aml
-
-_[Insert section about setting up the tools and files to patch a DSDT. Leave in dsl format for now.]_  
-
-> _Note to Self:_ This section's location is required for the Brightness Control section below.
-
 ### Extension (kext) Installation:
 Use proper methods to install the most up-to-date versions of the following kexts in  
 `(ssd) macOS:/Library/Extensions/`:
@@ -160,6 +150,52 @@ Use proper methods to install the most up-to-date versions of the following kext
 - VoodooInput.kext
 - VoodooPS2Controller.kext
 - WhateverGreen.kext
+
+### Graphics Configuration
+
+[This is the guide :musical_note: I've been waiting for, all of my li------ife! :musical_note:](https://github.com/acidanthera/WhateverGreen/blob/master/Manual/FAQ.IntelHD.en.md)
+
+This laptop has an Intel Core i5-7200U (7th Gen) processor, with Intel HD 620 integrated graphics. According to [Intel Ark](https://ark.intel.com/content/www/us/en/ark/products/95443/intel-core-i5-7200u-processor-3m-cache-up-to-3-10-ghz.html), the graphics `Device ID` is `0x5916`.
+
+Crossreferencing with [Whatevergreen's supported list](https://github.com/acidanthera/WhateverGreen/blob/master/Manual/FAQ.IntelHD.en.md#intel-hd-graphics-610-650-kaby-lake-processors), we get this extra information:
+```
+ID: 59160000, STOLEN: 34 MB, FBMEM: 0 bytes, VRAM: 1536 MB, Flags: 0x00000B0B
+TOTAL STOLEN: 35 MB, TOTAL CURSOR: 1 MB (1572864 bytes), MAX STOLEN: 103 MB, MAX OVERALL: 104 MB (109588480 bytes)
+Model name: Intel HD Graphics KBL CRB
+Camelia: CameliaDisabled (0), Freq: 1388 Hz, FreqMax: 1388 Hz
+Mobile: 1, PipeCount: 3, PortCount: 3, FBMemoryCount: 3
+[0] busId: 0x00, pipe: 8, type: 0x00000002, flags: 0x00000098 - ConnectorLVDS
+[1] busId: 0x05, pipe: 9, type: 0x00000400, flags: 0x00000187 - ConnectorDP
+[2] busId: 0x04, pipe: 10, type: 0x00000800, flags: 0x00000187 - ConnectorHDMI
+00000800 02000000 98000000
+01050900 00040000 87010000
+02040A00 00080000 87010000
+```
+
+Unfortunately for me, Whatevergreen defaults to `device-id` `0x591B0000`, so per Whatevergreen's guide linked above, I have to set my `device-id` manually in my Clover `config.plist` to `1659000` (from info above, and bytes are written in reverse order for this part).  
+![image from Whatevergreen guide](https://raw.githubusercontent.com/acidanthera/WhateverGreen/master/Manual/Img/kbl-r_igpu.png "image from Whatevergreen guide")  
+Or in text-mode (note, incomplete plist, only relevent section shown):
+```
+<dict>
+<key>Devices</key>
+    <dict>
+        <key>Properties</key>
+        <dict>
+            <key>PciRoot(0)/Pci(0x02,0)</key>
+            <dict>
+                <key>device-id</key>
+                <data>FlkAAA==</data>
+            </dict>
+        </dict>
+    </dict>
+</dict>
+```
+
+### Patching DSDT.aml
+
+_[Insert section about setting up the tools and files to patch a DSDT. Leave in dsl format for now.]_  
+
+> _Note to Self:_ This section's location is required for the Brightness Control section below.
 
 ### Backlight Brightness Control
 
@@ -262,7 +298,7 @@ PATCH YOUR OWN DSDT.aml FILE! This is a reminder to myself to not even upload my
 `ACPIBatteryManager.kext`, `AppleALC.kext`, `AppleBacklightFixup.kext`, `Lilu.kext`, `USBInjectAll.kext`, `VirtualSMC.kext`, `VoodooInput.kext`, `VoodooPS2Controller.kext`, `WhateverGreen.kext`
 
 <details>
-  <summary>My current working "config.plist"</summary>
+  <summary>Spoiler: My current working "config.plist"</summary>
   
   This should be able to be copied into TextEdit and saved as `config.plist`.
   
