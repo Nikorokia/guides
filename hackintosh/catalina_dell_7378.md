@@ -155,9 +155,14 @@ Use proper methods to install the most up-to-date versions of the following kext
 
 [This is the guide :musical_note: I've been waiting for, all of my li------ife! :musical_note:](https://github.com/acidanthera/WhateverGreen/blob/master/Manual/FAQ.IntelHD.en.md)
 
-This laptop has an Intel Core i5-7200U (7th Gen) processor, with Intel HD 620 integrated graphics. According to [Intel Ark](https://ark.intel.com/content/www/us/en/ark/products/95443/intel-core-i5-7200u-processor-3m-cache-up-to-3-10-ghz.html), the graphics `Device ID` is `0x5916`.
+This laptop has an Intel Core i5-7200U (7th Gen) processor, with Intel HD 620 integrated graphics.  
+According to [Intel Ark](https://ark.intel.com/content/www/us/en/ark/products/95443/intel-core-i5-7200u-processor-3m-cache-up-to-3-10-ghz.html), the graphics `Device ID` is `0x5916`.  
 
 Crossreferencing with [Whatevergreen's supported list](https://github.com/acidanthera/WhateverGreen/blob/master/Manual/FAQ.IntelHD.en.md#intel-hd-graphics-610-650-kaby-lake-processors), we get this extra information:
+```
+— 0x59160000 (mobile, 3 connectors, no fbmem, 35 MB)
+```
+and
 ```
 ID: 59160000, STOLEN: 34 MB, FBMEM: 0 bytes, VRAM: 1536 MB, Flags: 0x00000B0B
 TOTAL STOLEN: 35 MB, TOTAL CURSOR: 1 MB (1572864 bytes), MAX STOLEN: 103 MB, MAX OVERALL: 104 MB (109588480 bytes)
@@ -171,6 +176,68 @@ Mobile: 1, PipeCount: 3, PortCount: 3, FBMemoryCount: 3
 01050900 00040000 87010000
 02040A00 00080000 87010000
 ```
+Things to note here:  
+`STOLEN: 34 MB`  
+`FBMEM: 0 bytes`  
+
+<details>
+    <summary>Spoiler: Math!</summary>
+
+According to [this forum](https://www.applelife.ru/threads/intel-hd-graphics-3000-4000-4400-4600-5000-5500-5600-520-530-630.1289648/page-169#post-750369) linked in the WhateverGreen guide, the equation for "max stolen" video memory is:  
+    MAX STOLEN = 0x100000 + STOLEN * FBMemoryCount + FBMEM
+
+  <details>
+    <summary>Spoiler: Explanation Translation</summary>
+  
+  _vit9696's post from previous linked forum, Via Google Translate:_
+  
+  Regarding stolen memory in IntelFramebuffer.bt script for 010 Editor. Probably, it is necessary to explain what is going on there in general, and how the value is related to the settings in the BIOS.
+
+  Here is an example frame 0x19160000 from Skylake.
+  
+  ```
+  ID: 19160000, STOLEN: 34 MB, FBMEM: 21 MB, VRAM: 1536 MB, Flags: 0x0000090F
+  TOTAL STOLEN: 56 MB, TOTAL CURSOR: 1 MB (1572864 bytes), MAX STOLEN: 124 MB, MAX OVERALL: 125 MB (131608576 bytes)
+  Model name: Intel HD Graphics SKL CRB
+  Camelia: CameliaDisabled (0), Freq: 1388 Hz, FreqMax: 1388 Hz
+  Mobile: 1, PipeCount: 3, PortCount: 3, FBMemoryCount: 3
+  [0] busId: 0x00, pipe: 8, type: 0x00000002, flags: 0x00000098 - ConnectorLVDS
+  [1] busId: 0x05, pipe: 9, type: 0x00000400, flags: 0x00000187 - ConnectorDP
+  [2] busId: 0x04, pipe: 10, type: 0x00000400, flags: 0x00000187 - ConnectorDP
+  ```
+  
+  - Flags - framebuffer configuration as a bit mask
+  - STOLEN - framebuffer-stolenmem from a patch of green (bare value)
+  - FBMEM - framebuffer-fbmem from a patch of green (bare value)
+  - TOTAL STOLEN - a calculated value that must be less than or equal to the one set in the BIOS
+  - TOTAL CURSOR - calculated memory value for the hardware cursor on the screen
+  - MAX STOLEN is TOTAL STOLEN, but if Flags has a configuration that is as memory-hungry as possible
+  - MAX OVERALL is MAX STOLEN + TOTAL CURSOR
+  - FBMemoryCount - the number of framebuffers available
+  
+  How is it considered?  
+  MAX STOLEN = 0x100000 + STOLEN * FBMemoryCount + FBMEM  
+  However, MAX STOLEN is precisely the maximum, the actual value (TOTAL STOLEN) is usually less and depends on the bits in the flags. Depending on their values, part of the parameters of the formula changes.  
+
+  TOTAL STOLEN = 0x100000 + STOLEN * FBMemoryCount + FBMEM  
+  If the 1st bit is set (0x02) - FBFramebufferCommonMemory, then FBMemoryCount is taken as 1.  
+  If the 2nd bit (0x04) is NOT set - FBFramebufferCompression, then FBMEM is taken as 0.  
+  Since both bits are set in the example above, the actual value is only 56 megabytes.  
+  Correction: on Ivy Bridge TOTAL STOLEN = MAX STOLEN = FBMEM.  
+  
+  There is a check in Apple kexts that, after loading the framebuffer, checks that TOTAL STOLEN is less than or equal to the value from the Graphics and Memory Controller Hub for offset 0x50 according to the following formula: ((val << 17) & 0xFE000000) - 0x1000 (on older chipsets a little bit -other, but does not change the essence). This value should coincide with what the BIOS sets in the settings, but in general there are no guarantees, of course. Otherwise, panic.
+
+  On most laptops, 32 is set, and the minimum value for a frame with connectors is usually 64. In most cases, the value can and should be changed in the BIOS settings. If there is no such option, then we use the IFR Extractor and, by analogy with CFG Lock, update the value directly through writing to the variable. There are people who suggested just removing this panic (using patches like this), but the only thing that will lead to this is glitches and panics in the most optimistic case, since the necessary magical memory in the region where the Intel driver will write, will not appear.
+
+  If nothing at all (and the BIOS curve), you can <try> patch the framebuffer so that it consumes less memory in total. There are many options, and they are limited by your imagination.  
+  - you can turn off compression and remove fbmem  
+  - you can reduce both stolen / fbmem values ​​(for example, 19 and 9)  
+  But in general, you need to understand that too small a memory value will not allow the use of high resolutions.  
+
+  </details>
+
+</details>
+
 
 Unfortunately for me, Whatevergreen defaults to `device-id` `0x591B0000`, so per Whatevergreen's guide linked above, I have to set my `device-id` manually in my Clover `config.plist` to `1659000` (from info above, and bytes are written in reverse order for this part).  
 ![image from Whatevergreen guide](https://raw.githubusercontent.com/acidanthera/WhateverGreen/master/Manual/Img/kbl-r_igpu.png "image from Whatevergreen guide")  
