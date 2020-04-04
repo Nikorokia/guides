@@ -9,11 +9,15 @@ After creating my previous guide to installing Sierra on this laptop, I discover
     <summary>Recent Changes to My System</summary>
   
   Top is most Recent.
+  
+  - dropped down to just `AAPL,ig-platform-id > 00001659` in config.plist>Devices>Properties>PciRoot(etc).  
+    HDMI port still works! Planning to disable unused port.
   - Upgraded to Clover r5107.
   - Reverted to using RehabMan's VooDooPS2Controller.kext (personal issues with Force Touch and tap-clicking in latest version)
   - Reverted to older `config.plist`: something I changed broke `ACPIBatteryManager.kext`. On the plus side, I have brightness keys back now.
   - Reverted to RehabMan's `SSDT-PNLF.aml` in ACPI/patched/ (for brightness keys).
-  - Issue: Clover r5107 broke "Minimalism" theme icons. Using Clover.app's theme "optimize" feature fixed them but made them hilariously huge. Somewhere in there is a fix.
+  - ~~Issue: Clover r5107 broke "Minimalism" theme icons. Using Clover.app's theme "optimize" feature fixed them but made them hilariously huge. Somewhere in there is a fix.~~  
+    thanks to pit512 [on GitHub](https://github.com/CloverHackyColor/CloverBootloader/issues/89), theme is back to normal. it seems currently icons need to be png files renamed as icns files.
   
 </details>
 
