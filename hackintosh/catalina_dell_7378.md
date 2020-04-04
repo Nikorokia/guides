@@ -175,6 +175,12 @@ These are listed in order of importance:
 This laptop has an Intel Core i5-7200U (7th Gen) processor, with Intel HD 620 integrated graphics.  
 According to [Intel Ark](https://ark.intel.com/content/www/us/en/ark/products/95443/intel-core-i5-7200u-processor-3m-cache-up-to-3-10-ghz.html), the graphics `Device ID` is `0x5916`.  
 
+WhateverGreen defaults for laptops to using a different device id. I ensured it would use the correct one by adding `AAPL,ig-platform-id > 00001659` in config.plist>Devices>Properties>PciRoot(etc) (using ProperTree).
+
+<details>
+<summary>Spoiler: old config information</summary>
+
+
 Crossreferencing with [Whatevergreen's supported list](https://github.com/acidanthera/WhateverGreen/blob/master/Manual/FAQ.IntelHD.en.md#intel-hd-graphics-610-650-kaby-lake-processors), we get this extra information:
 ```
 — 0x59160000 (mobile, 3 connectors, no fbmem, 35 MB)
@@ -293,6 +299,8 @@ All changes, in text mode (note, incomplete plist, only relevent section shown):
     </dict>
 </dict>
 ```
+
+</details>
 
 ### HDMI / Sound over HDMI
 
