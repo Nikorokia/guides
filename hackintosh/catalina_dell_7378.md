@@ -139,17 +139,30 @@ After creating my previous guide to installing Sierra on this laptop, I discover
 ## Post-Installation Configuration
 
 ### Extension (kext) Installation:
-Use proper methods to install the most up-to-date versions of the following kexts in  
+Use proper methods (either with Hackintool or the manual way) to install the most up-to-date versions of the following kexts in  
 `(ssd) macOS:/Library/Extensions/`:
-- ACPIBatteryManager.kext
-- AppleALC.kext
-- AppleBacklightFixup.kext
-- Lilu.kext
-- USBInjectAll.kext
 - VirtualSMC.kext
+- Lilu.kext
+- WhateverGreen.kext
+- AppleALC.kext
 - VoodooInput.kext
 - VoodooPS2Controller.kext
-- WhateverGreen.kext
+- ACPIBatteryManager.kext
+- USBInjectAll.kext
+
+These are listed in order of importance:
+- VirtualSMC.kext: primary enabler of macOS on unsupported hardware. (FakeSMC.kext is another, older option)
+- Lilu.kext: multipurpose library of hardware enablers and fixups.
+- WhateverGreen.kext: multipurpose graphics fixup library.  
+  _depends on Lilu_.
+- AppleALC.kext: multipurpose audio fixup library.  
+  _depends on Lilu_.
+- VoodooPS2Controller.kext: enables various PS2 keyboard/input devices.
+- VoodooInput.kext: addon library, used herer for laptop touchpad input.  
+  _depends on VoodooPS2Controller_.
+- ACPIBatteryManager.kext: adds battery controller and reporting support.
+- USBInjectAll.kext: enables all USB ports on device. Supposedly this is supposed to be just a temporary fix; I haven't gotten around to learning how to write a custom SSDT for my ports yet.
+
 
 ### Graphics Configuration
 
@@ -241,7 +254,26 @@ According to [this forum](https://www.applelife.ru/threads/intel-hd-graphics-300
 
 Unfortunately for me, Whatevergreen defaults to `device-id` `0x591B0000`, so per Whatevergreen's guide linked above, I have to set my `device-id` manually in my Clover `config.plist` to `1659000` (from info above, and bytes are written in reverse order for this part).  
 ![image from Whatevergreen guide](https://raw.githubusercontent.com/acidanthera/WhateverGreen/master/Manual/Img/kbl-r_igpu.png "image from Whatevergreen guide")  
-Or in text-mode (note, incomplete plist, only relevent section shown):
+
+**stolenmem**  
+As noted above, I have STOLEN of 34mb.  
+Converted to hex, that's 22.  
+With a leading 0 (because macOS expects something like 128mb memory), that would be `02200000`.  
+Clover wants the pairs in reverse order (don't ask me why), giving a final value of:  
+`framebuffer-stolenmem: 00002002`
+
+I'm currently testing the following values:
+```
+framebuffer-stolenmem    data    {length = 4, bytes = 00002002}
+```
+Old values:
+```
+framebuffer-stolenmem    data    {length = 4, bytes = 00003001}
+framebuffer-fbmem        data    {length = 4, bytes = 00009000}
+framebuffer-con1-pipe    data    {length = 4, bytes = 0x12000000}
+```
+
+All changes, in text mode (note, incomplete plist, only relevent section shown):
 ```
 <dict>
 <key>Devices</key>
@@ -257,6 +289,42 @@ Or in text-mode (note, incomplete plist, only relevent section shown):
     </dict>
 </dict>
 ```
+
+### HDMI / Sound over HDMI
+
+[Excellent Guide](https://www.tonymacx86.com/threads/guide-general-framebuffer-patching-guide-hdmi-black-screen-problem.269149/#post-1886885)  
+[OpenCore info](https://khronokernel.github.io/Opencore-Vanilla-Desktop-Guide/config.plist/kaby-lake.html)  
+
+<details>
+    <summary>Spoiler: old config</summary>
+
+Add/uncomment these in `config.plist / Devices / [Properties]`:  
+
+| Devices* | | Properties Key* | Properties Value | Value Type |
+| :--- | --- | :--- | :--- | :--- |
+| PciRoot(0)/Pci(0x02,0)  | ->  | AAPL,ig-platform-id | 00001659 (testing 00001b59) | DATA |
+|                         |     | device-id | 16590000 | DATA |
+|                         |     | framebuffer-con1-enable | 1 | NUMBER |
+|                         |     | framebuffer-con1-pipe | 12000000 | DATA |
+|                         |     | framebuffer-con1-type | 00080000 | DATA |
+|                         |     | framebuffer-fbmem | 00009000 | DATA |
+|                         |     | framebuffer-patch-enable | 1 | NUMBER |
+|                         |     | framebuffer-stolenmem | 00003001 | DATA |
+
+</details>
+
+Sound over HDMI using WhateverGreen requires AppleALC.kext, which should've been installed with the other kext files as part of the beginning of this post-macOS-installation section.
+
+HDMI-Specific Sources:  
+[Reddit Thread](https://www.reddit.com/r/hackintosh/comments/8sbtrs/help_hdmi_output_make_high_sierra_to_crash/) (Gateway source)  
+[RehabMan's Intel iGPU HDMI Patching Guide](https://www.tonymacx86.com/threads/guide-intel-igpu-hdmi-dp-audio-all-sandy-bridge-kaby-lake-and-likely-later.189495/) (Theoretical Solution)  
+[Dell 7378 Troubleshooting Thread](https://www.tonymacx86.com/threads/solved-hackintosh-restarts-when-connecting-hdmi-cable.262080/page-3) (Personal Solution, use method to get proper `framebuffer-conX-enable`, etc. device)  
+[Also Dell 7378 Troubleshooting](https://www.tonymacx86.com/threads/need-help-with-hdmi-output-solved.287923/page-2) (Auxiliary thread to previous link)  
+[More Troubleshooting with different hardware](https://www.tonymacx86.com/threads/solved-hdmi-not-working-on-intel-hd4000-with-whatevergreen.263840/)  
+
+### Onboard Audio
+
+_[Insert section about AppleALC.kext, ALC id, and boot arg alcid=33.]
 
 ### Patching DSDT.aml
 
@@ -318,35 +386,6 @@ Following [this guide](https://noobsplanet.com/index.php?threads/brightness-keys
   ```
 
 </details>
-
-### Onboard Audio
-
-_[Insert section about AppleALC.kext, ALC id, and boot arg alcid=33.]
-
-> _Note to Self:_ AppleALC requires Lilu.
-
-### HDMI / Sound over HDMI
-Add/uncomment these in `config.plist / Devices / [Properties]`:  
-
-| Devices* | | Properties Key* | Properties Value | Value Type |
-| :--- | --- | :--- | :--- | :--- |
-| PciRoot(0)/Pci(0x02,0)  | ->  | AAPL,ig-platform-id | 00001659 (testing 00001b59) | DATA |
-|                         |     | device-id | 16590000 | DATA |
-|                         |     | framebuffer-con1-enable | 1 | NUMBER |
-|                         |     | framebuffer-con1-pipe | 12000000 | DATA |
-|                         |     | framebuffer-con1-type | 00080000 | DATA |
-|                         |     | framebuffer-fbmem | 00009000 | DATA |
-|                         |     | framebuffer-patch-enable | 1 | NUMBER |
-|                         |     | framebuffer-stolenmem | 00003001 | DATA |
-
-> _Note to Self:_ Sound over HDMI using WhateverGreen requires AppleALC (a previous section).
-
-HDMI-Specific Sources:  
-[Reddit Thread](https://www.reddit.com/r/hackintosh/comments/8sbtrs/help_hdmi_output_make_high_sierra_to_crash/) (Gateway source)  
-[RehabMan's Intel iGPU HDMI Patching Guide](https://www.tonymacx86.com/threads/guide-intel-igpu-hdmi-dp-audio-all-sandy-bridge-kaby-lake-and-likely-later.189495/) (Theoretical Solution)  
-[Dell 7378 Troubleshooting Thread](https://www.tonymacx86.com/threads/solved-hackintosh-restarts-when-connecting-hdmi-cable.262080/page-3) (Personal Solution, use method to get proper `framebuffer-conX-enable`, etc. device)  
-[Also Dell 7378 Troubleshooting](https://www.tonymacx86.com/threads/need-help-with-hdmi-output-solved.287923/page-2) (Auxiliary thread to previous link)  
-[More Troubleshooting with different hardware](https://www.tonymacx86.com/threads/solved-hdmi-not-working-on-intel-hd4000-with-whatevergreen.263840/)  
 
 ## Summary
 
