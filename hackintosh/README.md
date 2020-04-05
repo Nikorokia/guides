@@ -151,6 +151,11 @@ Some promising WiFi cards for mobile Hackintosh systems:
     See [this github thread](https://github.com/osy86/HaC-Mini/issues/197), [this reddit thread](https://www.reddit.com/r/hackintosh/comments/fbtak5/is_anybody_using_wifi_adapter_bcm94360ng/), and [this product page](https://www.aliexpress.com/item/4000631796433.html).  
 - OEM Apple WiFi card + NGFF adapter: ideal out-of-box support?  
     See [this tonymacx86 thread](https://www.tonymacx86.com/threads/100-working-12-6-pin-apple-wifi-bt-card-to-m-2-ngff-adapter-handoff-unlock-with-watch-uefi.215895/).
+    
+[Native Power Management for laptops](https://www.tonymacx86.com/threads/guide-native-power-management-for-laptops.175801/)  
+[Sub thread for Ivy Bridge](https://www.tonymacx86.com/threads/ml-native-ivy-bridge-cpu-and-gpu-power-management.86807/)  
+[Native Power Management main thread](https://www.tonymacx86.com/threads/macos-native-cpu-igpu-power-management.222982/)  
+[fidele007's guide](https://github.com/fidele007/Asus-ROG-GL552VW-Hackintosh/wiki/Native-power-management-%28Proper-sleep-wake%29)  
 
 Reference System sources:  
 [tonymacx86 #1](https://www.tonymacx86.com/threads/guide-dell-inspiron-13-5378-2-in-1-macos-10-12-6.230009/), [tonymacx86 #2](https://www.tonymacx86.com/threads/work-in-progress-installing-sierra-on-dell-inspiron-13-7378-kaby-lake-laptop.213855/), [insanelymac](https://www.insanelymac.com/forum/topic/304408-dell-inspiron-13-7000-2-in-1-model-7347-is-this-hardware-possible/), [redit user](https://www.reddit.com/r/hackintosh/comments/b5v5zm/how_stable_can_a_hackintosh_be/ejipyos/)  
