@@ -157,6 +157,8 @@ Some promising WiFi cards for mobile Hackintosh systems:
 [Native Power Management main thread](https://www.tonymacx86.com/threads/macos-native-cpu-igpu-power-management.222982/)  
 [fidele007's guide](https://github.com/fidele007/Asus-ROG-GL552VW-Hackintosh/wiki/Native-power-management-%28Proper-sleep-wake%29)  
 
+[Creating SSDT for USB](https://github.com/fidele007/Asus-ROG-GL552VW-Hackintosh/wiki/Creating-a-Custom-SSDT-for-USB-Ports)
+
 Reference System sources:  
 [tonymacx86 #1](https://www.tonymacx86.com/threads/guide-dell-inspiron-13-5378-2-in-1-macos-10-12-6.230009/), [tonymacx86 #2](https://www.tonymacx86.com/threads/work-in-progress-installing-sierra-on-dell-inspiron-13-7378-kaby-lake-laptop.213855/), [insanelymac](https://www.insanelymac.com/forum/topic/304408-dell-inspiron-13-7000-2-in-1-model-7347-is-this-hardware-possible/), [redit user](https://www.reddit.com/r/hackintosh/comments/b5v5zm/how_stable_can_a_hackintosh_be/ejipyos/)  
 [Promising-Looking Large Guides](https://osxlatitude.com/forums/topic/8506-dell-latitude-inspiron-precision-vostro-xps-clover-guide/?tab=comments#comment-54632)
