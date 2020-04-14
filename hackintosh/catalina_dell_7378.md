@@ -387,14 +387,15 @@ In Use:
     HS01    <01 00 00 00>   USB-A Left Side, 2.0
     HS03    <03 00 00 00>   USB-A Right Side, 2.0
     HS04    <04 00 00 00>   USB-C, 2.0
-    HS05    <00 00 00 00>   Integrated Webcam (Internal)
-    HS06    <00 00 00 00>   Bluetooth from PCIe Wifi port (Internal)
-    HS07    <00 00 00 00>   Touchscreen (Internal)
+    HS05    <05 00 00 00>   Integrated Webcam (Internal)
+    HS06    <06 00 00 00>   Bluetooth from PCIe Wifi port (Internal)
+    HS07    <07 00 00 00>   Touchscreen (Internal)
+    HS08    <08 00 00 00>   SD Card reader
     SS01    <0d 00 00 00>   USB-A Left Side, 3.0
     SS04    <10 00 00 00>   USB-C, 3.0
 
 Unknown/unused:
-    HS02,HS08,HS09,HS10,SS02,SS03,SS05,USR1,USR2
+    HS02,HS09,HS10,SS02,SS03,SS05,USR1,USR2
 
 Full List (discovered via exclusions):
 MacBookPro14,1 > AppleACPIPlatformExpert > PCI0@0 > XHC@14
