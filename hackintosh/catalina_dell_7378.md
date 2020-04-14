@@ -338,6 +338,94 @@ HDMI-Specific Sources:
 
 _[Insert section about AppleALC.kext, ALC id, and boot arg alcid=33.]
 
+### USB ports (SSDT)
+Ensure you have USBInjectAll.kext installed and these patches in Clover's config.plist/ACPI/Patches (these patches are system-specific):
+
+Comment                                                         | Find      | Replace   | Notes
+---                                                             | ---       | ---       | ---
+change OSID to XSID (to avoid match against _OSI XOSI patch)    | 4F534944  | 58534944  | brightness control?
+change _OSI to XOSI                                             | 5F4F5349  | 584F5349  | brightness control?
+change GFX0 to IGPU                                             | 47465830  | 49475055  | brightness control?
+change ECDV to EC                                               | 45434456  | 45435F5F  | macOS 10.14+ booting
+change EHC1 to EH01                                             | 45484331  | 45483031  | added for USB patching
+change EHC2 to EH02                                             | 45484332  | 45483032  | added for USB patching
+change XHC1 to XHC                                              | 58484331  | 5848435F  | added for USB patching
+change XHCI to XHC                                              | 58484349  | 5848435F  | added for USB patching
+
+> _Note to Self:_ Eventually I want to bake these into the patched DSDT so they're not bootloader-specifc. This will require confirming which patches are **actually** necessary.
+
+Procedure Overview:
+1. Open IORegistryExplorer or [USBMap](https://github.com/corpnewt/USBMap).
+2. Test all ports with USB 2.0 device.
+    1. Obtain list of HSxx devices in use. **Note the port numbers.**
+    2. Exclude HS ports with boot command, reboot.
+3. Test all ports with USB 3.0 device.
+    1. Obtain list of SSxx devices in use. **Note the port numbers.**
+    2. Exclude SS ports with boot command, reboot.
+4. Experiment with ports with all USR ports.
+    1. Obtain list. **Note the port numbers.**
+    2. Remove exclusion boot commands, reboot.
+5. Build SSDT or kext with only in-use ports.
+
+Boot args:  
+- `-uia_exclude_hs` (exclude HSxx ports)  
+- `-uia_exclude_ss` (exclude SSxx ports) 
+- `uia_include=xxxx,xxxx` (include specific ports)
+- `uia_exclude=xxxx,xxxx` (exlcude specific ports)
+- **example:** `-uia_exclude_ss uia_exclude=USR1,USR2`  
+- **example:** `-uia_exclude_hs uia_include=HS03`  
+
+<details>
+    <summary>Spoiler: My Obtained Information</summary>
+    
+```
+USB 3.0 Bus PCI Device ID: 0x9d2f
+    (Apple Logo > About This Mac > System Report > USB > USB 3.0 Bus)
+
+In Use:
+    name    port            notes
+    HS01    <01 00 00 00>   USB-A Left Side, 2.0
+    HS03    <03 00 00 00>   USB-A Right Side, 2.0
+    HS04    <04 00 00 00>   USB-C, 2.0
+    HS05    <00 00 00 00>   Integrated Webcam (Internal)
+    HS06    <00 00 00 00>   Bluetooth from PCIe Wifi port (Internal)
+    HS07    <00 00 00 00>   Touchscreen (Internal)
+    SS01    <0d 00 00 00>   USB-A Left Side, 3.0
+    SS04    <10 00 00 00>   USB-C, 3.0
+
+Unknown/unused:
+    HS02,HS08,HS09,HS10,SS02,SS03,SS05,USR1,USR2
+
+Full List (discovered via exclusions):
+MacBookPro14,1 > AppleACPIPlatformExpert > PCI0@0 > XHC@14
+  XHC@14000000
+    HS01 - USBA (Left Side)
+    HS02
+    HS03 - USBA (Right Side)
+    HS04 - USBC
+    HS05 - Webcam
+    HS06 - Bluetooth
+    HS07 - Touchscreen
+    HS08
+    HS09
+    HS10
+    SS01 - USBA (Left Side)
+    SS02
+    SS03
+    SS04 - USBC
+    SS05
+    USR1
+    USR2
+```
+
+</details>
+
+Notes:
+- Apple devices can only have a maximum of 15 USB ports (without external hubs). USBInjectAll obeys this, hence exluding port sections to discover all ports.
+- USB 2.0 are usually named "HSxx" (High Speed), USB 3.0 are usually named "SSxx" (Super Speed).
+- Since USB 3.0 ports are physically backwards compatible, they usually have both an "HSxx" entry and an "SSxx" entry. Both will need to be discovered using separate 2.0 and 3.0 -specific devices.
+- Some USB-C ports will have multiple "SSxx" entries for their multiple orientations.
+
 ### Patching DSDT.aml
 
 _[Insert section about setting up the tools and files to patch a DSDT. Leave in dsl format for now.]_  
