@@ -399,6 +399,29 @@ Following [this guide](https://noobsplanet.com/index.php?threads/brightness-keys
 
 </details>
 
+## Clover Options
+
+Explanations for other Clover options I've discovered are necessary for this system.
+
+### KernalAndKextPatches
+
+##### KernelLapic
+
+According to the [Clover Wiki](https://sourceforge.net/p/cloverefiboot/wiki/KernelAndKextPatches/#kernellapic):
+> HP notebooks have lapic problems, which can be solved by using the boot parameter `cpus=1` or by using this option.
+
+LAPIC, meaning Local Advanced Programmable Interrupt Controller. More info on [Wikipedia](https://en.wikipedia.org/wiki/Advanced_Programmable_Interrupt_Controller). Here, it solves issues using multiple cpu cores, especially on HP systems.
+
+##### KernelPm
+
+According to the [Clover Wiki](https://sourceforge.net/p/cloverefiboot/wiki/KernelAndKextPatches/#kernelpm):
+> Kernel power management patch for Haswell with locked msrs. Works with 10.8.5 and 10.9 kernels.
+
+but, per [this thread](https://www.reddit.com/r/hackintosh/comments/87n9u3/kernelpm_needed_for_kaby_lake/):
+> KernelPm is not just for Haswell - it is for any system that uses XCPM and has MSR_PKG_CST_CONFIG_CONTROL locked.
+>
+> Starting with Haswell Macs, CPU power management functionality was moved into the kernel (known as XNU CPU Power Management). KernelPm patches the kernel to prevent writes to MSR_PKG_CST_CONFIG_CONTROL (MSR 0xE2), which is frequently locked on many systems (can usually be disabled by disabling the firmware option "CFG Lock"). Without this patch, you will encounter a kernel panic if MSR 0xE2 is locked (which appears to be the case for your system).
+
 ## Summary
 
 PATCH YOUR OWN DSDT.aml FILE! This is a reminder to myself to not even upload my patched version. This file is specific to the hardware, and should be recompiled every time individually.  
