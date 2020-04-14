@@ -339,6 +339,9 @@ HDMI-Specific Sources:
 _[Insert section about AppleALC.kext, ALC id, and boot arg alcid=33.]
 
 ### USB ports (SSDT)
+
+[Master guide by RehabMan](https://www.tonymacx86.com/threads/guide-creating-a-custom-ssdt-for-usbinjectall-kext.211311/) - [Supplementary guide by fidele007](https://github.com/fidele007/Asus-ROG-GL552VW-Hackintosh/wiki/Creating-a-Custom-SSDT-for-USB-Ports)
+
 Ensure you have USBInjectAll.kext installed and these patches in Clover's config.plist/ACPI/Patches (these patches are system-specific):
 
 Comment                                                         | Find      | Replace   | Notes
@@ -380,22 +383,22 @@ Boot args:
     
 ```
 USB 3.0 Bus PCI Device ID: 0x9d2f
-    (Apple Logo > About This Mac > System Report > USB > USB 3.0 Bus)
+USB 3.0 Bus PCI Vendor ID: 0x8086
 
 In Use:
     name    port            notes
     HS01    <01 00 00 00>   USB-A Left Side, 2.0
     HS03    <03 00 00 00>   USB-A Right Side, 2.0
     HS04    <04 00 00 00>   USB-C, 2.0
-    HS05    <05 00 00 00>   Integrated Webcam (Internal)
-    HS06    <06 00 00 00>   Bluetooth from PCIe Wifi port (Internal)
-    HS07    <07 00 00 00>   Touchscreen (Internal)
-    HS08    <08 00 00 00>   SD Card reader
+    HS05    <05 00 00 00>   Internal: Integrated HD Webcam
+    HS06    <06 00 00 00>   Internal: Bluetooth from PCIe Wifi port
+    HS07    <07 00 00 00>   Internal: ELAN Touchscreen
+    HS08    <08 00 00 00>   Internal: SD card reader
     SS01    <0d 00 00 00>   USB-A Left Side, 3.0
     SS04    <10 00 00 00>   USB-C, 3.0
 
 Unknown/unused:
-    HS02,HS09,HS10,SS02,SS03,SS05,USR1,USR2
+    HS02,HS09,HS10,SS02,SS03,SS05,SS06,USR1,USR2
 
 Full List (discovered via exclusions):
 MacBookPro14,1 > AppleACPIPlatformExpert > PCI0@0 > XHC@14
@@ -407,7 +410,7 @@ MacBookPro14,1 > AppleACPIPlatformExpert > PCI0@0 > XHC@14
     HS05 - Webcam
     HS06 - Bluetooth
     HS07 - Touchscreen
-    HS08
+    HS08 - SD card reader
     HS09
     HS10
     SS01 - USBA (Left Side)
@@ -415,6 +418,7 @@ MacBookPro14,1 > AppleACPIPlatformExpert > PCI0@0 > XHC@14
     SS03
     SS04 - USBC
     SS05
+    SS06
     USR1
     USR2
 ```
@@ -426,6 +430,71 @@ Notes:
 - USB 2.0 are usually named "HSxx" (High Speed), USB 3.0 are usually named "SSxx" (Super Speed).
 - Since USB 3.0 ports are physically backwards compatible, they usually have both an "HSxx" entry and an "SSxx" entry. Both will need to be discovered using separate 2.0 and 3.0 -specific devices.
 - Some USB-C ports will have multiple "SSxx" entries for their multiple orientations.
+- Make sure to note down your USB Bus PCI Device and Vendor IDs for each Bus on the system (found via `Apple Logo` > `About This Mac` > `System Report` > `USB` > `USB 3.0 Bus` (etc) ).
+
+##### Editing SSDT-UIAC.dsl
+
+Grab a copy of [RehabMan's template](https://raw.githubusercontent.com/RehabMan/OS-X-USB-Inject-All/master/SSDT-UIAC-ALL.dsl). Open it up in a text editor.
+
+Keep this part:
+```
+DefinitionBlock ("", "SSDT", 2, "hack", "_UIAC", 0)
+{
+    Device(UIAC)
+    {
+        Name(_HID, "UIA00000")
+
+        Name(RMCF, Package()
+        {
+```
+modify these inner blocks (as below), and end with this part:
+```
+        })
+    }
+}
+//EOF
+```
+
+Start by removing the large inner blocks that don't apply to the system. Got your USB Bus Device/Vendor IDs? These blocks can be mixed and matched depending on the busses present, but since I only have one (9d2f, as noted above) I just needed:
+```
+            "8086_9dxx", Package()  // examples: 0x9d2f, 0x9ded
+            {
+                "port-count", Buffer() { 18, 0, 0, 0 },
+                "ports", Package()
+                {
+                    [...]
+                },
+            },
+```
+
+Now remove the smaller inner-inner blocks to match your list of discovered ports. Remember the 15-port limit, or research ways of getting around it.  
+This is an example of a block I kept, with identifying comment added:
+```
+                    "HS01", Package() // USB-A Left Side, 2.0
+                    {
+                        "UsbConnector", 3,
+                        "port", Buffer() { 1, 0, 0, 0 },
+                    },
+```
+
+Next, change the number on the "UsbConnector" line to reflect the type of port that specific one is. Per [fidele007](https://github.com/fidele007/Asus-ROG-GL552VW-Hackintosh/wiki/Creating-a-Custom-SSDT-for-USB-Ports),
+- USB2 = 0
+- USB3 = 3
+- internal = 255
+- USB type C ports can be either 9 or 10, which depends on how the hardware deals with the two possible orientations of a USB type C device/cable:
+    - If a USB-C uses the same SSxx in both orientations, then it has an internal switch (UsbConnector=9).
+    - If a USB-C uses a different SSxx in each orientation, then it has no switch (UsbConnector=10).
+
+You shouldn't need to change the "port" layouts, but do verify they match the ones you recorded, adjusting for hex/decimal conversion: `{ 0d 00 00 00 }` = `{ 13, 0, 0, 0 }`, `{ 10, 00, 00, 00 }` = `{ 16, 0, 0, 0 }`, etc.
+
+Finally, clean up the file: align indents, ensure commas and open/close brackets, etc.  
+Also fix block match names to match your hardware: I used the "8086_9dxx" block, and so renamed it to "8086_9d2f".
+
+##### Compile, load, and test
+
+Open in MaciASL, save as `SSDT-UIAC.aml`, and place in `EFI:/EFI/CLOVER/ACPI/patched/`. Remove any added boot arguments from this section (excludes, includes, etc.).  
+**Leave `USBInjectAll.kext` installed.** Everything we've created just tells the kext how to inject properly.  
+Reboot and test (the part I haven't done yet).
 
 ### Patching DSDT.aml
 
