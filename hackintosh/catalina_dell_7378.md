@@ -498,9 +498,65 @@ Reboot and test (the part I haven't done yet).
 
 ### Patching DSDT.aml
 
-_[Insert section about setting up the tools and files to patch a DSDT. Leave in dsl format for now.]_  
+Refer to my [ACPI Patching Guide](https://github.com/Nikorokia/guides/wiki/ACPI-Patching) on my wiki for dissassembling, patching, and reassembling the DSDT.aml file.
 
-> _Note to Self:_ This section's location is required for the Brightness Control section below.
+Apply the following patches to `DSDT.dsl` (uncompiled DSDT.aml):
+- "Fix _WAK Arg0 v2”
+- "Fix Mutex with non-zero SyncLevel”
+- "RTC Fix”
+- "Shutdown Fix v2"
+- "USB3 _PRW 0x6D Skylake (Instant Wake)"
+
+Additionally as part of keyboard brightness control, apply this custom patch from krosseyed ("BRT6 Backlight Key"): Paste the following code into the `Patch Text` field, wait for the changes to load, and then click "Apply".
+```
+into method label BRT6 replace_content
+begin
+If (LEqual (Arg0, One))\n
+{\n
+// Brightness Up\n
+    Notify (^^LPCB.PS2K, 0x0406)\n
+}\n
+If (And (Arg0, 0x02))\n
+{\n
+// Brightness Down\n
+    Notify (^^LPCB.PS2K, 0x0405)\n
+}\n
+end;
+```
+
+If when clicking compile you get the errors below, replace a section [to fix them](https://www.tonymacx86.com/threads/solved-help-me-fix-dsdt-error.229025/):  
+Errors:
+```
+Line  | Code | Message
+4442    6126   syntax error, unexpected PARSEOP_IF, expecting PARSEOP_CLOSE_PAREN or ','
+4446    6126   syntax error, unexpected PARSEOP_CLOSE_PAREN
+10780   6126   syntax error, unexpected PARSEOP_SCOPE, expecting $end and premature End-Of-File
+```
+Replace this section (Use "Edit > Find > Find..." to assist):
+```
+            If (LEqual (PM6H, One))
+            {
+                CreateBitField (BUF0, \_SB.PCI0._Y0C._RW, ECRW)  // _RW_: Read-Write Status
+                Store (Zero, ECRW (If (PM0H)
+                        {
+                            CreateDWordField (BUF0, \_SB.PCI0._Y0D._LEN, F0LN)  // _LEN: Length
+                            Store (Zero, F0LN)
+                        }))
+            }
+```
+With this:
+```
+            If (LEqual (PM6H, One))
+            {
+                CreateBitField (BUF0, \_SB.PCI0._Y0C._RW, ECRW)  // _RW_: Read-Write Status
+                Store (Zero, ECRW)
+            }
+            If (PM0H)
+            {
+                CreateDWordField (BUF0, \_SB.PCI0._Y0D._LEN, F0LN)  // _LEN: Length
+                Store (Zero, F0LN)
+            }
+```
 
 ### Backlight Brightness Control
 
