@@ -609,15 +609,23 @@ PATCH YOUR OWN DSDT.aml FILE! This is a reminder to myself to not even upload my
 
 **Most Important File:**  
 `EFI:/EFI/CLOVER/config.plist`  
+_Currently, the only special values are an "ECDV to EC" hotpatch, "-alcid=33" bootarg for AppleALC internal audio, "AAPL,ig-platform-id" for WhateverGreen, "-dart=0" bootarg, and KernelPM patch. Other config is handled via SSDTs._  
 
 **Files in "EFI:/EFI/CLOVER/ACPI/patched/" folder:**  
-`DSDT.aml` (patched), `SSDT-PNLF.aml` (acidanthera, brightness control), `SSDT-XOSI.aml` (brightness keys), `SSDT-UIAC.aml` (USB layout)  
-
-**Extensions in "EFI:/EFI/CLOVER/kexts/other/" folder:**  
-`Lilu.kext`, `USBInjectAll.kext`, `VirtualSMC.kext`, `VoodooInput.kext`, `VoodooPS2Controller.kext`, `WhateverGreen.kext`  
+- `DSDT.aml`: custom patched
+- `SSDT-PNLF.aml`: acidanthera version, brightness control with WhateverGreen
+- `SSDT-XOSI.aml`: Dell brightness keys; ACPIBattery hook?
+- `SSDT-UIAC.aml`: custom USB layout for USBInjectAll.kext
+- `SSDT-EH01.aml`: USB support
+- `SSDT-EH02.aml`: USB support
+- `SSDT-XHC.aml`: USB support
 
 **Extensions installed in "macOS:/Library/Extensions/" folder:**
 `ACPIBatteryManager.kext`, `AppleALC.kext`, `Lilu.kext`, `USBInjectAll.kext`, `VirtualSMC.kext`, `VoodooInput.kext`, `VoodooPS2Controller.kext`, `WhateverGreen.kext`
+
+**Extensions in "EFI:/EFI/CLOVER/kexts/other/" folder:**  
+`Lilu.kext`, `USBInjectAll.kext`, `VirtualSMC.kext`, `VoodooInput.kext`, `VoodooPS2Controller.kext`, `WhateverGreen.kext`  
+_config.plist/SystemParameters/InjectKexts=Detect. These are only for macOS upgrades and rescues._  
 
 <details>
   <summary>Spoiler: My current working "config.plist"</summary>
