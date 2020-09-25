@@ -1,0 +1,1 @@
+Recently had to flash a **Mac Pro (Early 2009)** from `4,1` to `5,1`. A copy of the procedure may be in the Wiki. The firmware tool is from the original forum post detailing the initial procedure, the Mac Pro firmware is from Apple's website (poached from broken HTML/javascript). Both are archived here for posterity.
